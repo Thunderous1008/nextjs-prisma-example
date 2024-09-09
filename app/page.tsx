@@ -69,14 +69,18 @@ export default function Home() {
       </form>
       <ul className="mt-6 bg-white p-6 rounded-lg shadow-md w-96">
         <h3 className="text-center font-bold">List of Users</h3>
-        {users.map((user) => (
-          <li
-            key={user.id}
-            className="border-b border-gray-200 py-2 text-center"
-          >
-            {user.name} - {user.email}
-          </li>
-        ))}
+        {Array.isArray(users) && users.length > 0 ? (
+          users.map((user) => (
+            <li
+              key={user.id}
+              className="border-b border-gray-200 py-2 text-center"
+            >
+              {user.name} - {user.email}
+            </li>
+          ))
+        ) : (
+          <li className="text-center">No users found</li>
+        )}
       </ul>
     </div>
   );
