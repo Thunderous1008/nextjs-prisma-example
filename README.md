@@ -68,7 +68,9 @@ Once the replica set is initialized, Prisma can connect to the database.
 
 **3. Access the application**
 
-After initializing the MongoDB replica set, you can access the Next.js app in your browser at: `http://localhost:3000`. Then, add new users via the form and view the user list below it.
+After initializing the MongoDB replica set, you can access the Next.js app in your browser at: `http://localhost:3000`.
+
+Then, add new users via the form and view the user list below it.
 
 ## Useful commands
 
