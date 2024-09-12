@@ -1,41 +1,35 @@
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    environment:
-      - DATABASE_URL=mongodb://mongo:27017/users_management?replicaSet=rs0
-    depends_on:
-      mongo:
-        condition: service_healthy
-    volumes:
-      - .:/app
-    command: /bin/sh -c "sleep 10 && npm run dev"
-    networks:
-      - mongo-network 
-
   mongo:
     image: mongo:6.0
-    ports:
-      - "27017:27017"
+    container_name: mongodb
     volumes:
       - mongo-data:/data/db
-      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-    command: bash -c "mongod --replSet rs0 --bind_ip_all && sleep 5 && mongosh --eval 'rs.initiate()'"
-    healthcheck:
-      test: ["CMD", "mongosh", "--eval", "rs.status().ok"]
-      interval: 15s
-      retries: 10
+    ports:
+      - "27017:27017"
+    command: >
+      bash -c " mongod --replSet rs0 --bind_ip_all "
     networks:
-      - mongo-network 
-volumes:
-  mongo-data:
+      - app-network
+
+  app:
+    build: .
+    container_name: nextjs-app
+    environment:
+      - DATABASE_URL=mongodb://mongodb:27017/users_management
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+    entrypoint: /bin/sh -c "npm install && npm run dev"
 
 networks:
-  mongo-network:
+  app-network:
     driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local
