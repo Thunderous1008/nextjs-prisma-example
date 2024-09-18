@@ -40,6 +40,7 @@ This will:
 
 * Build and start the MongoDB container on port 27017.
 * Build and start the Next.js app on port 3000.
+* Generate the Prisma Client inside the Next.js app Docker container. 
 
 **2. Initialize MongoDB Replica Set**
 
