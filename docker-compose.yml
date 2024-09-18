@@ -24,7 +24,7 @@ services:
       - mongo
     networks:
       - app-network
-    entrypoint: /bin/sh -c "npm install && npm run dev"
+    entrypoint: /bin/sh -c "npm install && npx prisma generate && npm run dev"
 
 networks:
   app-network:
