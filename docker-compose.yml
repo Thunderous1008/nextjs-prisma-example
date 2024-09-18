@@ -1,0 +1,35 @@
+services:
+  mongo:
+    image: mongo:6.0
+    container_name: mongodb
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+    command: >
+      bash -c " mongod --replSet rs0 --bind_ip_all "
+    networks:
+      - app-network
+
+  app:
+    build: .
+    container_name: nextjs-app
+    environment:
+      - DATABASE_URL=mongodb://mongodb:27017/users_management
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+    entrypoint: /bin/sh -c "npm install && npx prisma generate && npm run dev"
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local
